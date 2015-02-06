@@ -118,6 +118,8 @@ You can make the CLI output more verbose and enable the log file by setting `DEB
 
 ### Important notes
 
+**Spotify remaining muted**
+
 Please make sure to always use the provided launcher when running Spotify. Under some circumstances Spotify might remain muted when exiting the application. This is a technical limitation with PulseAudio. Spotify-AdKiller automatically unmutes Spotify when initially run.
 
 If, for some reason, Spotify does remain muted you can use the following command to unmute it manually while it's running:
@@ -125,6 +127,16 @@ If, for some reason, Spotify does remain muted you can use the following command
 ```bash
 for i in $(LC_ALL=C pactl list | grep -E '(^Sink Input)|(media.name = \"Spotify\"$)' | cut -d \# -f2 | grep -v Spotify); do pactl set-sink-input-mute "$i" no; done
 ```
+
+**Using Spotify-AdKiller without the wrapper**
+
+While we do advise against it you can run Spotify-AdKiller without the wrapper script if you so desire. Please just make sure that:
+
+- you supply the title of your Spotify window as the first argument to `spotify-adkiller.sh`, e.g.:
+
+    spotify-adkiller.sh "Spotify Free - Linux Preview"
+
+- Spotify is running before you execute `spotify-adkiller.sh`
 
 ### Similar projects
 

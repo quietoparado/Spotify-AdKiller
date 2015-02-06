@@ -38,8 +38,9 @@
 # settings
 
 ADKILLER="spotify-adkiller.sh"
-WMTITLE="Spotify - Linux Preview"
 LOGFILE="$HOME/.Spotify-AdKiller.log"
+WMTITLES=("Spotify Free - Linux Preview" \
+          "Spotify - Linux Preview")
 
 # DNS-BLOCK
 
@@ -133,10 +134,12 @@ spotify_launch(){
             exit 1
       fi
       echo "## Waiting for Spotify ##"
-      xprop -name "$WMTITLE" WM_ICON_NAME > /dev/null 2>&1
-      if [[ "$?" == "0" ]]; then
-        break
-      fi
+      for WMTITLE in "${WMTITLES[@]}"; do
+        xprop -name "$WMTITLE" WM_ICON_NAME > /dev/null 2>&1
+        if [[ "$?" == "0" ]]; then
+          break 2
+        fi
+      done
       COUNTER=$(( COUNTER + 1 ))
       sleep 5
     done
@@ -149,9 +152,9 @@ adkiller_launch(){
       if [[ "$DEBUG" = "1" ]]; then
         echo "$INFOMSG1"
         notify_send "$INFOMSG1"
-        $ADKILLER > "$LOGFILE" 2> /dev/null &
+        $ADKILLER "$WMTITLE" > "$LOGFILE" 2> /dev/null &
       else
-        $ADKILLER > /dev/null 2>&1 &
+        $ADKILLER "$WMTITLE" > /dev/null 2>&1 &
       fi
     fi
 }

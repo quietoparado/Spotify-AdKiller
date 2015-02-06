@@ -41,9 +41,9 @@ CONFIG_FILE="$CONFIG_PATH/Spotify-AdKiller.cfg"
 
 # settings
 
-WMTITLE="Spotify - Linux Preview"
 BINARY="spotify"
 ALERT="/usr/share/sounds/freedesktop/stereo/complete.oga"
+WMTITLE="$1"
 
 # initialization
 
@@ -63,6 +63,9 @@ ERRORMSG2="ERROR: Default music folder not found. Please set a custom location.
 Switching to simple automute (no local playback)"
 ERRORMSG3="ERROR: No music found in the specified location. Please check the settings. \
 Switching to simple automute (no local playback)"
+ERRORMSG4="ERROR: No window title for Spotify supplied. Please make sure to use the \
+launcher or supply the window title as the first argument to spotify-adkiller.sh
+e.g.: 'spotify-adkiller.sh \"Spotify Free - Linux Preview\"'"
 
 ## FUNCTIONS
 
@@ -83,6 +86,14 @@ print_horiz_line(){
 
 read_config(){
     [[ -f "$CONFIG_FILE" ]] && source "$CONFIG_FILE"
+}
+
+check_wmtitle(){
+  if [[ -z "$WMTITLE" ]]; then
+    notify_send "$ERRORMSG4"
+    echo "$ERRORMSG4"
+    exit 1
+  fi
 }
 
 set_musicdir(){
@@ -498,6 +509,9 @@ restore_settings(){
 
 # read configuration file
 read_config
+
+# check if window title was supplied
+check_wmtitle
 
 # create PIDFILE for inter-process-communication
 PIDFILE="$(mktemp -u --tmpdir "${0##*/}.XXXXXXXX")"
